@@ -1,0 +1,72 @@
+# ========== Unity Generated Files ==========
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+
+# ========== OS-Specific Files ==========
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# ========== IDE & Editor Files ==========
+# Visual Studio / JetBrains Rider
+.vs/
+*.sln
+*.csproj
+*.userprefs
+*.pidb
+*.suo
+*.user
+*.booproj
+*.svd
+*.pdb
+
+# JetBrains Rider
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# ========== Unity Plugin-Related ==========
+/Packages/
+/ProjectSettings/EditorBuildSettings.asset
+/Assets/Plugins/*/Editor/*.meta
+/Assets/Plugins/*/Editor/*/meta
+
+# ========== Unity Asset Store Tools ==========
+/Assets/AssetStoreTools/
+
+# ========== Logs, Cache, and Temporary Files ==========
+/.DS_Store
+*.log
+*.tmp
+*.bak
+*.swp
+*.lock
+*.pid
+
+# ========== Build Artifacts ==========
+/bin/
+/obj/
+/Builds/
+/ExportedObj/
+/MemoryCaptures/
+
+# ========== Temporary Script Assemblies ==========
+/*.csproj
+/*.unityproj
+/*.sln
+
+# ========== Git Ignore Exceptions ==========
+!Assets/**/*.meta
+!ProjectSettings/**/*.asset
+
