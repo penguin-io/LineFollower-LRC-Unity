@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class SARcontroller : MonoBehaviour
 {
@@ -51,7 +50,7 @@ public class SARcontroller : MonoBehaviour
         // --- Arm, Gripper, and Grabbing Input ---
         HandleArmMovement();
         //HandleGripperMovement();
-        HandleGrabbing();
+        //HandleGrabbing();
     }
 
     void FixedUpdate()
@@ -92,116 +91,116 @@ public class SARcontroller : MonoBehaviour
             gripperBase.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
     }
 
-    private void HandleGripperMovement()
-    {
-        float currentGap = Vector3.Distance(gripperLeft.position, gripperRight.position);
+    //private void HandleGripperMovement()
+    //{
+    //    float currentGap = Vector3.Distance(gripperLeft.position, gripperRight.position);
 
-        // Close Gripper (Z Key)
-        if (Input.GetKey(KeyCode.Z) && currentGap > minGripperGap)
-        {
-            gripperLeft.Translate(Vector3.right * gripperSpeed * Time.deltaTime);
-            gripperRight.Translate(Vector3.left * gripperSpeed * Time.deltaTime);
-        }
+    //    // Close Gripper (Z Key)
+    //    if (Input.GetKey(KeyCode.Z) && currentGap > minGripperGap)
+    //    {
+    //        gripperLeft.Translate(Vector3.right * gripperSpeed * Time.deltaTime);
+    //        gripperRight.Translate(Vector3.left * gripperSpeed * Time.deltaTime);
+    //    }
 
-        // Open Gripper (X Key)
-        if (Input.GetKey(KeyCode.X) && currentGap < maxGripperGap)
-        {
-            gripperLeft.Translate(Vector3.left * gripperSpeed * Time.deltaTime);
-            gripperRight.Translate(Vector3.right * gripperSpeed * Time.deltaTime);
-        }
-    }
+    //    // Open Gripper (X Key)
+    //    if (Input.GetKey(KeyCode.X) && currentGap < maxGripperGap)
+    //    {
+    //        gripperLeft.Translate(Vector3.left * gripperSpeed * Time.deltaTime);
+    //        gripperRight.Translate(Vector3.right * gripperSpeed * Time.deltaTime);
+    //    }
+    //}
 
-    /// <summary>
-    /// Handles the logic for grabbing and releasing objects.
-    /// </summary>
-    private void HandleGrabbing()
-    {
-        // Check if the grab key is pressed down this frame
-        if (Input.GetKeyDown(grabKey))
-        {
-            // If we are holding an object, release it.
-            if (heldObject != null)
-            {
-                ReleaseObject();
-            }
-            // Otherwise, if we are not holding anything and there are objects in range, grab one.
-            else if (objectsInRange.Any())
-            {
-                GrabObject();
-            }
-        }
-    }
+    ///// <summary>
+    ///// Handles the logic for grabbing and releasing objects.
+    ///// </summary>
+    //private void HandleGrabbing()
+    //{
+    //    // Check if the grab key is pressed down this frame
+    //    if (Input.GetKeyDown(grabKey))
+    //    {
+    //        // If we are holding an object, release it.
+    //        if (heldObject != null)
+    //        {
+    //            ReleaseObject();
+    //        }
+    //        // Otherwise, if we are not holding anything and there are objects in range, grab one.
+    //        else if (objectsInRange.Any())
+    //        {
+    //            GrabObject();
+    //        }
+    //    }
+    //}
 
-    /// <summary>
-    /// Attaches the closest valid object in range to the gripper.
-    /// </summary>
-    private void GrabObject()
-    {
-        // Find the closest object from the list of objects in range
-        Collider closestObject = objectsInRange
-            .Where(obj => obj != null)
-            .OrderBy(obj => Vector3.Distance(gripperBase.position, obj.transform.position))
-            .FirstOrDefault();
+    ///// <summary>
+    ///// Attaches the closest valid object in range to the gripper.
+    ///// </summary>
+    //private void GrabObject()
+    //{
+    //    // Find the closest object from the list of objects in range
+    //    Collider closestObject = objectsInRange
+    //        .Where(obj => obj != null)
+    //        .OrderBy(obj => Vector3.Distance(gripperBase.position, obj.transform.position))
+    //        .FirstOrDefault();
 
-        if (closestObject == null) return;
+    //    if (closestObject == null) return;
 
-        heldObject = closestObject.transform;
+    //    heldObject = closestObject.transform;
 
-        // Parent the object to the gripper base so it moves with the arm
-        heldObject.SetParent(gripperBase);
+    //    // Parent the object to the gripper base so it moves with the arm
+    //    heldObject.SetParent(gripperBase);
 
-        // Disable physics on the object while it's being held to prevent weird behavior
-        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-        }
-    }
+    //    // Disable physics on the object while it's being held to prevent weird behavior
+    //    Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+    //    if (rb != null)
+    //    {
+    //        rb.isKinematic = true;
+    //    }
+    //}
 
-    /// <summary>
-    /// Releases the currently held object.
-    /// </summary>
-    private void ReleaseObject()
-    {
-        // Re-enable physics on the object so it can fall
-        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
+    ///// <summary>
+    ///// Releases the currently held object.
+    ///// </summary>
+    //private void ReleaseObject()
+    //{
+    //    // Re-enable physics on the object so it can fall
+    //    Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+    //    if (rb != null)
+    //    {
+    //        rb.isKinematic = false;
+    //    }
 
-        // Un-parent the object so it is free in the world again
-        heldObject.SetParent(null);
+    //    // Un-parent the object so it is free in the world again
+    //    heldObject.SetParent(null);
 
-        // Clear our reference to the held object
-        heldObject = null;
-    }
+    //    // Clear our reference to the held object
+    //    heldObject = null;
+    //}
 
-    // --- Unity Trigger Methods ---
+    //// --- Unity Trigger Methods ---
 
-    /// <summary>
-    /// This is called by Unity's physics engine when a Collider enters the trigger zone.
-    /// </summary>
-    private void OnTriggerEnter(Collider other)
-    {
-        // Check if the object has the "Obstacle" tag and isn't already in our list
-        if (other.CompareTag("Obstacle") && !objectsInRange.Contains(other))
-        {
-            objectsInRange.Add(other);
-            Debug.Log("Bruhwdklfhdghk,fgieryk");
-        }
-    }
+    ///// <summary>
+    ///// This is called by Unity's physics engine when a Collider enters the trigger zone.
+    ///// </summary>
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    // Check if the object has the "Obstacle" tag and isn't already in our list
+    //    if (other.CompareTag("Obstacle") && !objectsInRange.Contains(other))
+    //    {
+    //        objectsInRange.Add(other);
+    //        Debug.Log("Bruhwdklfhdghk,fgieryk");
+    //    }
+    //}
 
-    /// <summary>
-    /// This is called by Unity's physics engine when a Collider exits the trigger zone.
-    /// </summary>
-    private void OnTriggerExit(Collider other)
-    {
-        // If the object that left is in our list, remove it
-        if (objectsInRange.Contains(other))
-        {
-            objectsInRange.Remove(other);
-        }
-    }
+    ///// <summary>
+    ///// This is called by Unity's physics engine when a Collider exits the trigger zone.
+    ///// </summary>
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    // If the object that left is in our list, remove it
+    //    if (objectsInRange.Contains(other))
+    //    {
+    //        objectsInRange.Remove(other);
+    //    }
+    //}
 }
 
