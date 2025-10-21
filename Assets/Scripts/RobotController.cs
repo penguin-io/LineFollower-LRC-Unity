@@ -4,30 +4,34 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class RobotController : MonoBehaviour
 {
+    // --- Public Fields ---
+    [Header("Sensor Configuration")]
+    [Tooltip("Assign the Sonar Sensor GameObject here.")]
+    public SonarSensor sonarSensor;
+
+    [Header("Wheel Configuration")]
     public WheelCollider wheelLeft;
     public WheelCollider wheelRight;
     public Transform wheelLeftTransform;
     public Transform wheelRightTransform;
 
+    [Header("Movement Control")]
+    [Tooltip("The force applied to the brakes when an obstacle is detected.")]
+    public float brakeForce = 5000f;
     public float targetRPM = 100f;
     public float maxMotorTorque = 1000f;
+    public float steeringSensitivity = 50f;
+
+    [Header("Speed PID Gains")]
     public float Kp_speed = 0.5f;
     public float Ki_speed = 0.1f;
     public float Kd_speed = 0.01f;
 
-    public float steeringSensitivity = 50f;
 
-    // --- Private PID State Variables ---
     private IRsensorArray sensorArray;
     private Rigidbody rb;
-
-    // PID state for the left wheel
-    private float integralLeft = 0f;
-    private float lastErrorLeft = 0f;
-
-    // PID state for the right wheel
-    private float integralRight = 0f;
-    private float lastErrorRight = 0f;
+    private float integralLeft, lastErrorLeft;
+    private float integralRight, lastErrorRight;
 
     void Start()
     {
@@ -41,18 +45,42 @@ public class RobotController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float lineError = sensorArray.lineError;
 
+        if (sonarSensor != null && sonarSensor.isObstacleDetected)
+        {
+            ApplyBrakes();
+            return;
+        }
+
+        ReleaseBrakes();
+        HandleLineFollowing();
+    }
+
+
+    private void ApplyBrakes()
+    {
+        wheelLeft.motorTorque = 0;
+        wheelRight.motorTorque = 0;
+        wheelLeft.brakeTorque = brakeForce;
+        wheelRight.brakeTorque = brakeForce;
+    }
+
+
+    private void ReleaseBrakes()
+    {
+        wheelLeft.brakeTorque = 0;
+        wheelRight.brakeTorque = 0;
+    }
+
+    private void HandleLineFollowing()
+    {
+        float lineError = sensorArray.lineError;
         float steeringAdjustment = lineError * steeringSensitivity;
-        float targetRPM_Left = targetRPM + steeringAdjustment; 
+        float targetRPM_Left = targetRPM + steeringAdjustment;
         float targetRPM_Right = targetRPM - steeringAdjustment;
 
-
-        float currentRPM_Left = wheelLeft.rpm;
-        float currentRPM_Right = wheelRight.rpm;
-
-        float torqueLeft = CalculatePIDOutput(targetRPM_Left, currentRPM_Left, ref integralLeft, ref lastErrorLeft);
-        float torqueRight = CalculatePIDOutput(targetRPM_Right, currentRPM_Right, ref integralRight, ref lastErrorRight);
+        float torqueLeft = CalculatePIDOutput(targetRPM_Left, wheelLeft.rpm, ref integralLeft, ref lastErrorLeft);
+        float torqueRight = CalculatePIDOutput(targetRPM_Right, wheelRight.rpm, ref integralRight, ref lastErrorRight);
 
         wheelLeft.motorTorque = torqueLeft;
         wheelRight.motorTorque = torqueRight;
@@ -61,17 +89,10 @@ public class RobotController : MonoBehaviour
     private float CalculatePIDOutput(float target, float current, ref float integral, ref float lastError)
     {
         float error = target - current;
-        float P = Kp_speed * error;
-
         integral += error * Time.fixedDeltaTime;
-        float I = Ki_speed * integral;
-
         float derivative = (error - lastError) / Time.fixedDeltaTime;
-        float D = Kd_speed * derivative;
         lastError = error;
-
-        float output = P + I + D;
-
+        float output = (Kp_speed * error) + (Ki_speed * integral) + (Kd_speed * derivative);
         return Mathf.Clamp(output, -maxMotorTorque, maxMotorTorque);
     }
 
@@ -84,9 +105,7 @@ public class RobotController : MonoBehaviour
     void UpdateWheelVisual(WheelCollider col, Transform tr)
     {
         if (tr == null) return;
-        Vector3 position;
-        Quaternion rotation;
-        col.GetWorldPose(out position, out rotation);
+        col.GetWorldPose(out Vector3 position, out Quaternion rotation);
         tr.position = position;
         tr.rotation = rotation;
     }
