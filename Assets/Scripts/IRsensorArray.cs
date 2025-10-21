@@ -41,6 +41,11 @@ public class IRsensorArray : MonoBehaviour
 
         // 2. Calculate the error based on which sensors are active
         CalculateLineError();
+
+        //for (int i = 0; i < sensorStates.Length; i++)
+        //{
+        //    Debug.Log($"Sensor {i}: {sensorStates[i]}");
+        //}
     }
 
     /// <summary>
