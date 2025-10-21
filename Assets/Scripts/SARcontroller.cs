@@ -45,7 +45,7 @@ public class SARcontroller : MonoBehaviour
     void Update()
     {
         // --- Platform Input (Get in Update for responsiveness) ---
-        moveInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        moveInput = new Vector3(-Input.GetAxis("Vertical"), 0f, Input.GetAxis("Horizontal"));
 
         // --- Arm, Gripper, and Grabbing Input ---
         HandleArmMovement();

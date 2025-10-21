@@ -34,18 +34,4 @@ public class LCDlogic : MonoBehaviour
             Debug.Log(other.name + " entered the LCD trigger. Activating " + objectToActivate.name);
         }
     }
-
-    /// <summary>
-    /// Optional: This method deactivates the object when the player leaves the trigger zone.
-    /// </summary>
-    private void OnTriggerExit(Collider other)
-    {
-        // Check if the exiting object has the tag "Player".
-        if (objectToActivate != null && other.CompareTag("Player"))
-        {
-            // Deactivate the object again.
-            objectToActivate.SetActive(false);
-            Debug.Log(other.name + " exited the LCD trigger. Deactivating " + objectToActivate.name);
-        }
-    }
 }
