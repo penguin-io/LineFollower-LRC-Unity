@@ -63,21 +63,21 @@ public class SARcontroller : MonoBehaviour
 
         // Upper Arm (R/F Keys)
         if (Input.GetKey(KeyCode.R))
-            upperArm.Rotate(Vector3.right, -rotationSpeed * Time.deltaTime);
+            upperArm.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
         if (Input.GetKey(KeyCode.F))
-            upperArm.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
+            upperArm.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
 
         // Forearm (T/G Keys)
         if (Input.GetKey(KeyCode.T))
-            forearm.Rotate(Vector3.right, -rotationSpeed * Time.deltaTime);
+            forearm.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
         if (Input.GetKey(KeyCode.G))
-            forearm.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
+            forearm.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
 
         // Gripper Base (Y/H Keys)
         if (Input.GetKey(KeyCode.Y))
-            gripperBase.Rotate(Vector3.right, -rotationSpeed * Time.deltaTime);
+            gripperBase.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
         if (Input.GetKey(KeyCode.H))
-            gripperBase.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
+            gripperBase.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
     }
 
 
@@ -96,8 +96,8 @@ public class SARcontroller : MonoBehaviour
         // Open Gripper (X Key)
         if (Input.GetKey(KeyCode.X) && currentGap < maxGripperGap)
         {
-            gripperLeft.Translate(Vector3.left * gripperSpeed * Time.deltaTime);
-            gripperRight.Translate(Vector3.right * gripperSpeed * Time.deltaTime);
+            gripperLeft.Translate(Vector3.up * gripperSpeed * Time.deltaTime);
+            gripperRight.Translate(-Vector3.up * gripperSpeed * Time.deltaTime);
         }
     }
 }
